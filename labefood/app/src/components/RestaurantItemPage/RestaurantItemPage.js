@@ -3,29 +3,30 @@ import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import AppContext from '../../context/AppContext';
 import { Menu } from '../Menu/Menu';
+import { useProtectedRoute } from "../../hooks/useProtectedRoute";
+import { baseUrl } from '../../variables/variables';
 
 import { MainContainer, Container, Header, TextLarge, FlexSpaceBetween, Card, CardRestaurantImg, CardProductImg, ProductCategories, TextContent, TextMedium, TextSmall, TextRegular } from "../../styles/mainStyles";
-  
-const baseUrl = "https://us-central1-missao-newton.cloudfunctions.net/rappi4A/restaurants";
-  
-const axiosConfig = {
-  headers: {
-    auth: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Ikxtc1lsT3piZnM5T29hT2FvSVI4IiwibmFtZSI6IkFtYW5kYSBKb25hcyIsImVtYWlsIjoiYW1hbmRham9uYXNAZ21haWwuY29tIiwiY3BmIjoiMDEzLjg3MS42MTAtMjQiLCJoYXNBZGRyZXNzIjp0cnVlLCJhZGRyZXNzIjoiUnVhIHRlc3RlLCA3MiwgNzIgLSBDYXNhcsOjbyIsImlhdCI6MTU5NzcwNjQwNX0.O2dHVZ5mKN7TkZ88l0bc1kYPUgatu5XHxggFfNDNTss",
-  }
-}
-
+ 
 export const RestaurantItemPage = () => {
     const { id } = useParams();
     const [ loading, setLoading ] = useState(true);
     const [ quantity, setQuantity ] = useState(0);
     const [ adding, setAdding ] = useState(false);
-    const appContext = useContext(AppContext);
+    const appContext = useContext(AppContext); 
 
+    const token = useProtectedRoute();
+    const axiosConfig = {
+      headers: {
+        auth: token,
+      }
+    }
+    
     const { name, logoUrl, products, category, deliveryTime, shipping, address} = appContext.activeRestaurant;
 
     useEffect(() => {
         axios
-          .get(`${baseUrl}/${id}`, axiosConfig)
+          .get(`${baseUrl}/restaurants/${id}`, axiosConfig)
           .then( response => {
             appContext.dispatch({ type: "LOAD_SINGLE_RESTAURANT", restaurant: response.data.restaurant });
             setLoading(false);

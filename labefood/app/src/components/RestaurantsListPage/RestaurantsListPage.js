@@ -47,6 +47,9 @@ export const RestaurantsListPage = () => {
     return (
         <MainContainer>
             {!searching ? <Header><ImgSmall src={logoLabefood} alt="Logo Labefood"/></Header> : <Header><TextLarge>Busca</TextLarge></Header>}
+            <Container>
+                <input placeholder="Restaurante"/>
+            </Container>
             {loading ? (
                 <p>Carregando...</p>
                 ) : (

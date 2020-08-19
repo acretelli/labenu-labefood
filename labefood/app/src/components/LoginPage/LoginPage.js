@@ -1,10 +1,12 @@
 import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
-import { useHistory } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { useForm } from '../../hooks/useForm';
 import { baseUrl } from '../../variables/variables';
 import { Menu } from '../Menu/Menu';
 import AppContext from "../../context/AppContext";
+
+import { MainContainer, Container, Header, TextLarge, TextRegular } from "../../styles/mainStyles";
 
 export const LoginPage = () => {
     const appContext = useContext(AppContext);
@@ -49,9 +51,8 @@ export const LoginPage = () => {
     }
 
     return (
-        <div className="container">
-            <Menu />
-            <h2>Login</h2>
+        <MainContainer>
+            <TextRegular>Entre</TextRegular>
             <form onSubmit={handleLogin}>
                 <div className="textfield">
                     <label htmlFor="email">E-mail</label>
@@ -77,6 +78,8 @@ export const LoginPage = () => {
                 </div>
                 <button>Entrar</button>
             </form>
-        </div>
+            <TextRegular>
+                Não possui cadastro? <Link to={`/signup`}>Clique aqui</Link></TextRegular>
+        </MainContainer>
     )
 }
