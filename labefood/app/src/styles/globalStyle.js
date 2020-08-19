@@ -10,7 +10,7 @@ export const GlobalStyle = createGlobalStyle `
         outline: none;
     }
     body {
-        background-color: #e86e5a;
+        background-color: #EE766C;
     }
     a {
         text-decoration: none;
@@ -35,24 +35,36 @@ export const GlobalStyle = createGlobalStyle `
         border-radius: 4px;
         box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.25)
     }
-    label {
-        padding: 0 4px;
-        position: absolute;
-        top: 0;
-        left: 12px;
-        background-color: #fff;
-        color: rgba(0, 0, 0, 0.25);
-        font-size: 12px;
-    }
     button {
+        margin-top: 16px;
+        color: #fff;
+        background-color: #EE766C;
+        cursor: pointer;
         &:hover {
-            cursor: pointer;
+            opacity: 0.6;
         }
     }
     .textfield {
         margin: 8px 0;
         padding: 8px 0;
         position: relative;
+        
+        label {
+            padding: 0 4px;
+            position: absolute;
+            top: 0;
+            left: 12px;
+            background-color: #fff;
+            color: rgba(0, 0, 0, 0.25);
+            font-size: 12px;
+        }
+    }
+    .switch-wrapper {
+        position: relative;
+    }
+    
+    .switch-wrapper > div {
+        position: absolute;
     }
 
 `

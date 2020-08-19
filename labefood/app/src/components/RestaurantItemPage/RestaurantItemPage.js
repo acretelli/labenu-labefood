@@ -3,6 +3,8 @@ import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import AppContext from '../../context/AppContext';
 import { Menu } from '../Menu/Menu';
+
+import { MainContainer, Container, Header, TextLarge, FlexSpaceBetween, Card, CardRestaurantImg, CardProductImg, ProductCategories, TextContent, TextMedium, TextSmall, TextRegular } from "../../styles/mainStyles";
   
 const baseUrl = "https://us-central1-missao-newton.cloudfunctions.net/rappi4A/restaurants";
   
@@ -15,6 +17,8 @@ const axiosConfig = {
 export const RestaurantItemPage = () => {
     const { id } = useParams();
     const [ loading, setLoading ] = useState(true);
+    const [ quantity, setQuantity ] = useState(0);
+    const [ adding, setAdding ] = useState(false);
     const appContext = useContext(AppContext);
 
     const { name, logoUrl, products, category, deliveryTime, shipping, address} = appContext.activeRestaurant;
@@ -39,41 +43,81 @@ export const RestaurantItemPage = () => {
         })
     }
 
+    const openQuantityBox = productId => {
+        const indexId = products.findIndex( product => {
+          return product.id === productId
+        });
+    
+        const produto = products[indexId];
+    
+        setAdding(produto)
+    }
+
+    const sumToCounter = () => {
+        appContext.dispatch({ type: "SUM_QUANTITY", count: appContext.count + 1 })
+    };
+
+    const subtractFromCounter = () => {
+        if (appContext.count > 0) {
+            appContext.dispatch({ type: "SUBTRACT_QUANTITY" });
+        }
+    };
+  
+    const addQuantity = (product, restaurantId) => {
+        appContext.dispatch({ type: "ADD_TO_CART", product: product, restaurantId: restaurantId });
+    }
+
+
     return (
-        <div className="restaurant-item">
+        <MainContainer>
+            <Header><TextLarge>Restaurante</TextLarge></Header>
             {loading ? (
                 <p>Carregando...</p>
             ) : (
-                <div>
-                    <h2>{name}</h2>
-                    <p>{category}</p>
-                    <img src={logoUrl} alt={name} />
-                    <p>{deliveryTime} min</p>
-                    <p>R${shipping.toFixed(2).replace('.', ',')}</p>
-                    <p>{address}</p>
+                <Container>
+                    <CardRestaurantImg src={logoUrl} alt={name} />
+                    <TextMedium>{name}</TextMedium>
+                    <TextSmall>{category}</TextSmall>
+                    <TextSmall>{address}</TextSmall>
+                    <FlexSpaceBetween>
+                        <TextSmall>{deliveryTime} min</TextSmall>
+                        <TextSmall>Frete R${shipping.toFixed(2).replace('.', ',')}</TextSmall>
+                    </FlexSpaceBetween>
                     <div>
                         {products && productsCategory.map(category => {
-                            return <ul key={category}>
-                                    <h3>{category}</h3>
+                            return <div key={category}>
+                                    <ProductCategories>{category}</ProductCategories>
                                     {products.map(product => {
                                         if(category === product.category) {
-                                            return (
-                                                <li key={product.key}>
-                                                    <h4>{product.name}</h4>
-                                                    <p>{product.description}</p>
-                                                    <p>{product.price}</p>
-                                                    <img src={product.photoUrl} alt={product.name}/>
-                                                </li>
-                                            )
+                                            return <Card key={product.id}>
+                                                    <FlexSpaceBetween>
+                                                    <CardProductImg src={product.photoUrl} alt={product.name}/>
+                                                    <TextContent>
+                                                    <TextMedium>{product.name}</TextMedium>
+                                                    <TextSmall>{product.description}</TextSmall>
+                                                    <TextRegular>R$ {product.price.toFixed(2).replace(".", ",")}</TextRegular>
+                                                    {appContext.cart.findIndex(productCart => product.id === productCart.id) === -1 ? <button onClick={() => openQuantityBox(product.id)}>Adicionar</button> : <button>Remover</button>}
+                                                    </TextContent>
+                                                    </FlexSpaceBetween>
+                                                    {adding.id === product.id && <div>
+                                                        <p>Selecione a quantidade desejada</p>
+                                                        <div>
+                                                            <div onClick={subtractFromCounter}>-</div>
+                                                            <div>{appContext.count}</div>
+                                                            <div onClick={sumToCounter}>+</div>
+                                                        </div>
+                                                        <button onClick={() => addQuantity(product, appContext.activeRestaurant.id)}>Adicionar</button>
+                                                    </div> } 
+                                                </Card>
                                         }
                                     })}
-                                </ul>
+                                </div>
                             }
                         )}
                     </div>
-                </div>
+                </Container>
             )}
             <Menu />
-        </div>
+        </MainContainer>
     )
 }

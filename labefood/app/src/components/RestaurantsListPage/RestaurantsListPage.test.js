@@ -1,7 +1,7 @@
 import React from "react";
 import axios from "axios";
 import { render, screen, waitForElementToBeRemoved } from "@testing-library/react";
-import { RestaurantsList } from "./RestaurantsList";
+import { RestaurantsList } from "./RestaurantsListPage";
 import { restaurants } from "../../makeRestaurants";
 
 describe("<App />", () => {

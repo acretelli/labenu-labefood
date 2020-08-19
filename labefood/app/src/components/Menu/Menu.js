@@ -6,7 +6,7 @@ export const Menu = () => {
     const history = useHistory();
 
     const goToHome = () => {
-        history.push('/')
+        history.push('/restaurants')
     }
 
     const goToCart = () => {

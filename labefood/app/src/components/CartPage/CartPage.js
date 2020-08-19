@@ -1,14 +1,144 @@
-import React from "react";
+import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
-import AppContext from "../../context/AppContext";
 import { Menu } from "../Menu/Menu";
+import { baseUrl } from "../../variables/variables";
+import { useProtectedRoute } from "../../hooks/useProtectedRoute";
+import AppContext from "../../context/AppContext";
+
+import { InputRadio, RadioField } from "./styles";
+import { MainContainer, Container, Header, TextLarge, FlexSpaceBetween, Card, CardProductImg, ProductCategories, TextContent, TextMedium, TextSmall, TextRegular } from "../../styles/mainStyles";
 
 export const CartPage = () => {
+    const appContext = useContext(AppContext);
+    const [ address, setAddress ] = useState();
+    const [ paymentMethod, setPaymentMethod ] = useState();
+    const [ loading, setLoading ] = useState(true);
+    const token = useProtectedRoute();
+    const axiosConfig = {
+        headers: {
+            auth: token,
+        }
+    }
+
+    useEffect(() => {
+        axios.get(`${baseUrl}/profile/address`, axiosConfig)
+        .then( response => {
+            setAddress(response.data.address);
+            setLoading(false);
+        })
+        .catch(err => {
+            console.log(err)
+        })
+    }, [setLoading]);
+    
+    const restaurantOrder = appContext.restaurantsList.filter(restaurant => {
+        if(appContext.cart.length !== 0  && restaurant.id === appContext.cart[0].restaurantId) {
+        return restaurant
+        }
+    });
+
+    const shipping = restaurantOrder.length !== 0 ? restaurantOrder[0].shipping : 0
+
+    let total = 0;
+    appContext.cart.forEach( product => {
+        total = total + product.price * product.quantity;
+    });
+    const handleInputRadio = event => {
+        setPaymentMethod(event.target.value)
+    }
+
+    const handlePlaceOrder = event => {
+        event.preventDefault();
+
+        const productsOrder = appContext.cart.map( product => {
+            return {
+                "quantity": Number(product.quantity),
+                "id": product.id
+            }
+        });
+
+        const restaurantId = appContext.cart[0].restaurantId;
+
+        const body = {
+            "products": productsOrder,
+            "paymentMethod": paymentMethod
+        }
+
+        axios.post(`${baseUrl}/restaurants/${restaurantId}/order`, body, axiosConfig)
+        .then( () => {
+            alert("sucesso")
+        })
+        .catch( err => {
+            console.log(err)
+        })
+    }
 
     return (
-        <div className="container">
-            <h2>Carrinho</h2>
+        <MainContainer>
+            <Header><TextLarge>Meu carrinho</TextLarge></Header>
+            {loading ? <p>Carregando...</p> : (
+                <TextContent>
+                    <TextMedium>Endereço de entrega</TextMedium>
+                    <TextSmall>{address.street}, {address.number} { address.apartment && <span>, {address.apartment}</span>}</TextSmall>
+                </TextContent>
+            )}
+            <Container>
+                {appContext.restaurantsList.map(restaurant => {
+                    if(appContext.cart[0] && restaurant.id === appContext.cart[0].restaurantId) {
+                    return <div key={restaurant.id}>
+                        <h3>{restaurant.name}</h3>
+                        <p>{restaurant.address}</p>
+                        <p>{restaurant.deliverytime}</p>
+                    </div>
+                    }
+                })}
+                {appContext.cart.map(product => {
+                    return <Card key={product.id}>
+                        <FlexSpaceBetween>
+                            <CardProductImg src={product.photoUrl} />
+                            <TextContent>
+                                <TextMedium>{product.name}</TextMedium>
+                                <TextSmall>{product.descriptions}</TextSmall>
+                                <TextSmall>R${product.price.toFixed(2).replace(".", ".")}</TextSmall>
+                            </TextContent>
+                        </FlexSpaceBetween>
+                        <p>{product.quantity}</p>
+                        <button>remover</button>
+                    </Card>
+                })}
+                <TextSmall>Frete: R${shipping.toFixed(2).replace(".", ",")}</TextSmall>
+            </Container>
+            <TextContent>
+                <TextMedium>Subtotal</TextMedium>
+                <TextRegular>R$ {(total + shipping).toFixed(2).replace(".", ".")}</TextRegular>
+            </TextContent>
+            <Container>
+                <ProductCategories>Forma de pagamento</ProductCategories>
+                <form onSubmit={handlePlaceOrder}>
+                    <RadioField>
+                        <InputRadio 
+                            type="radio" 
+                            name="payment" 
+                            value="money" 
+                            id="money"
+                            onChange={handleInputRadio}
+                        />
+                        <label htmlFor="money">Dinheiro</label>
+                    </RadioField>
+                    <RadioField>
+                        <InputRadio 
+                            type="radio" 
+                            name="payment" 
+                            value="creditcard" 
+                            id="creditcard"
+                            onChange={handleInputRadio}
+                        />
+                        <label htmlFor="creditcard">Cartão de crédito</label>
+                    </RadioField>
+                    <button>Confirmar</button>
+                </form>
+            </Container>
             <Menu />
-        </div>
+        </MainContainer>
     )
 }
