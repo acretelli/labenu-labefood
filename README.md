@@ -5,7 +5,7 @@
 [Documentação da API](https://documenter.getpostman.com/view/7549981/SWTEdGtT?version=latest#e6c05246-7dcc-483c-95a3-269792e59c37)
 
 <p align="center">
-  <img src="https://user-images.githubusercontent.com/29711622/90820458-c6ee3e80-e307-11ea-8f3a-96640abbe590.gif" alt="Imagem do app" />
+  <img style="max-height: 400px" src="https://user-images.githubusercontent.com/29711622/90820458-c6ee3e80-e307-11ea-8f3a-96640abbe590.gif" alt="Imagem do app" />
 </p>
 
 <br>
