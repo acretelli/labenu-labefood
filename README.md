@@ -1,17 +1,11 @@
-# Aplicação em construção
-
-
-# Labenu | Full-Stack Web Development Bootcamp
-Apredizado de frontend, backend e soft skills
-
-
 # Frontend - Projeto Labefood
 
-:dash: [Deploy da aplicação](http://)
+:dash: [Deploy da aplicação](http://acretelli-labefood.surge.sh/)
 
 [Documentação da API](https://documenter.getpostman.com/view/7549981/SWTEdGtT?version=latest#e6c05246-7dcc-483c-95a3-269792e59c37)
 
 <p align="center">
+  
 </p>
 
 <br>
@@ -105,3 +99,5 @@ Copyright :copyright: 2020 - LabeFood
 - [Email](anna.cbf@hotmail.com)
 
 <br>
+
+Desenvolvido para Labenu | [Full-Stack Web Development Bootcamp](https://www.labenu.com.br/)
