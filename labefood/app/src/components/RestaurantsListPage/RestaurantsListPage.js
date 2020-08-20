@@ -6,13 +6,16 @@ import { Menu } from '../Menu/Menu';
 import { baseUrl } from '../../variables/variables';
 import { useProtectedRoute } from "../../hooks/useProtectedRoute";
 
-import { MainContainer, Container, Header, ImgSmall, FlexSpaceBetween, Categories, Card, CardRestaurantImg, TextContent, TextMedium, TextSmall, TextLarge } from "../../styles/mainStyles";
+import { MainContainer, Container, Header, ImgSmall, FlexSpaceBetween, Categories, Card, CardRestaurantImg, TextContent, TextMedium, TextSmall, TextLarge, FlexSpaceBetweenCategories, BackBtn, InputSearch } from "../../styles/mainStyles";
 
-import logoLabefood from "../../images/labefood-red.svg";
+import logoLabefood from "../../images/labefood-white.svg";
+import iconBack from "../../images/back.svg";
 
 export const RestaurantsListPage = () => {
     const [ loading, setLoading ] = useState(true);
     const [ searching, setSearching ] = useState(false);
+    const [ inputSearch, setInputSearch ] = useState('');
+    const [ clickedCategory, setClickedCategory ] = useState('');
     const appContext = useContext(AppContext);
     const token = useProtectedRoute();
   
@@ -44,22 +47,58 @@ export const RestaurantsListPage = () => {
         })
     }
 
+    const onClickCategory = category => {
+        if ( clickedCategory === category ) {
+            setClickedCategory('')
+        } else {
+            setClickedCategory(category)
+        }
+    }
+
+    let filteredList = appContext.restaurantsList;
+
+    if ( clickedCategory !== '' ) {
+        filteredList = filteredList.filter( restaurant => {
+            if (restaurant.category.includes(clickedCategory)) {
+                return restaurant
+            }
+        })
+    }
+
+    if ( inputSearch !== '' ) {
+        filteredList = filteredList.filter( restaurant => {
+            if (restaurant.name.toLowerCase().includes(inputSearch.toLowerCase())) {
+                return restaurant
+            }
+        })
+    }
+    
+    const onChangeInput = event => {
+        setSearching(true);
+        setInputSearch(event.target.value);
+    }
+    
+    const goToRestaurantsList = () => {
+        setSearching(false);
+        setInputSearch('');
+    }
+
     return (
         <MainContainer>
-            {!searching ? <Header><ImgSmall src={logoLabefood} alt="Logo Labefood"/></Header> : <Header><TextLarge>Busca</TextLarge></Header>}
+            {!searching ? <Header><ImgSmall src={logoLabefood} alt="Logo Labefood"/></Header> : <Header><BackBtn src={iconBack} alt="Botão de voltar" onClick={goToRestaurantsList}/><TextLarge>Busca</TextLarge></Header>}
             <Container>
-                <input placeholder="Restaurante"/>
+                <InputSearch value={inputSearch} placeholder="Restaurante" onChange={onChangeInput}/>
             </Container>
             {loading ? (
                 <p>Carregando...</p>
                 ) : (
                 <Container>
-                    {!searching && <FlexSpaceBetween>
+                    {!searching && <FlexSpaceBetweenCategories>
                         {categories.map( category => {
-                            return <Categories>{category}</Categories>
+                            return <Categories key={category} onClick={() => onClickCategory(category)} isActive={clickedCategory} active={category}>{category}</Categories>
                         })}
-                    </FlexSpaceBetween>}
-                    {appContext.restaurantsList.map(item => {
+                    </FlexSpaceBetweenCategories>}
+                    {filteredList.length !== 0 ? filteredList.map(item => {
                         const { id, name, logoUrl, deliveryTime, shipping } = item;
                         return (
                             <Card key={id}>
@@ -75,7 +114,7 @@ export const RestaurantsListPage = () => {
                                 </Link>
                             </Card>
                         )
-                    })}
+                    }) : <TextSmall>Nada encontrado :(</TextSmall>}
                 </Container>
             )}
             <Menu />

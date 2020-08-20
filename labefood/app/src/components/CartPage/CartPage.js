@@ -6,7 +6,7 @@ import { useProtectedRoute } from "../../hooks/useProtectedRoute";
 import AppContext from "../../context/AppContext";
 
 import { InputRadio, RadioField } from "./styles";
-import { MainContainer, Container, Header, TextLarge, FlexSpaceBetween, Card, CardProductImg, ProductCategories, TextContent, TextMedium, TextSmall, TextRegular } from "../../styles/mainStyles";
+import { MainContainer, Container, Header, TextLarge, FlexSpaceBetween, Card, CardProductImg, ProductCategories, TextContent, TextMedium, TextSmall, TextRegular, QuantityValue, AddBtn, TextSmallRight, TextContentColor } from "../../styles/mainStyles";
 
 export const CartPage = () => {
     const appContext = useContext(AppContext);
@@ -77,21 +77,21 @@ export const CartPage = () => {
         <MainContainer>
             <Header><TextLarge>Meu carrinho</TextLarge></Header>
             {loading ? <p>Carregando...</p> : (
-                <TextContent>
+                <TextContentColor>
                     <TextMedium>Endereço de entrega</TextMedium>
                     <TextSmall>{address.street}, {address.number} { address.apartment && <span>, {address.apartment}</span>}</TextSmall>
-                </TextContent>
+                </TextContentColor>
             )}
             <Container>
-                {appContext.restaurantsList.map(restaurant => {
-                    if(appContext.cart[0] && restaurant.id === appContext.cart[0].restaurantId) {
+                {appContext.cart[0] ? appContext.restaurantsList.map(restaurant => {
+                    if(restaurant.id === appContext.cart[0].restaurantId) {
                     return <div key={restaurant.id}>
-                        <h3>{restaurant.name}</h3>
-                        <p>{restaurant.address}</p>
-                        <p>{restaurant.deliverytime}</p>
+                        <TextMedium>{restaurant.name}</TextMedium>
+                        <TextSmall>{restaurant.address}</TextSmall>
+                        <TextSmall>{restaurant.deliveryTime}</TextSmall>
                     </div>
                     }
-                })}
+                }) : <TextSmall>Não há produtos no carrinho.</TextSmall>}
                 {appContext.cart.map(product => {
                     return <Card key={product.id}>
                         <FlexSpaceBetween>
@@ -102,17 +102,13 @@ export const CartPage = () => {
                                 <TextSmall>R${product.price.toFixed(2).replace(".", ".")}</TextSmall>
                             </TextContent>
                         </FlexSpaceBetween>
-                        <p>{product.quantity}</p>
-                        <button>remover</button>
+                        <QuantityValue>{product.quantity}</QuantityValue>
+                        <AddBtn>remover</AddBtn>
                     </Card>
                 })}
-                <TextSmall>Frete: R${shipping.toFixed(2).replace(".", ",")}</TextSmall>
-            </Container>
-            <TextContent>
+                <TextSmallRight>Frete: R${shipping.toFixed(2).replace(".", ",")}</TextSmallRight>
                 <TextMedium>Subtotal</TextMedium>
                 <TextRegular>R$ {(total + shipping).toFixed(2).replace(".", ".")}</TextRegular>
-            </TextContent>
-            <Container>
                 <ProductCategories>Forma de pagamento</ProductCategories>
                 <form onSubmit={handlePlaceOrder}>
                     <RadioField>

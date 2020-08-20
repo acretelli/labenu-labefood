@@ -4,9 +4,11 @@ import { useForm } from '../../hooks/useForm';
 import { baseUrl } from '../../variables/variables';
 import { useProtectedRoute } from "../../hooks/useProtectedRoute";
 
-import { MainContainer, Container, Header, TextLarge } from "../../styles/mainStyles";
+import { MainContainer, Container, Header, TextLarge, BackBtn } from "../../styles/mainStyles";
   
-export const UpdateAddress = () => {
+import iconBack from '../../images/back.svg';
+
+export const UpdateAddress = (props) => {
     const [ address, setAddress ] = useState();
     const [ loading, setLoading ] = useState(true);
     const { form, onChange, resetForm } = useForm({
@@ -63,7 +65,7 @@ export const UpdateAddress = () => {
 
     return (
         <MainContainer>
-            <Header><TextLarge>Endereço</TextLarge></Header>
+            <Header><BackBtn src={iconBack} alt="Botão de voltar" onClick={props.onClick} /><TextLarge>Endereço</TextLarge></Header>
             <Container>
                 {loading ? <p>Carregando...</p> : <form onSubmit={handleAddressUpdate}>
                     <div className="textfield">

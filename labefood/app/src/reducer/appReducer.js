@@ -12,6 +12,9 @@ export const appReducer = (state, action) => {
       let newCart;
       newCart = [...state.cart, {...action.product, quantity: state.count, restaurantId: action.restaurantId}];
       return { ...state, cart: newCart, count: 0 };
+    case "REMOVE_FROM_CART":
+      const newCartWithoutProduct = state.cart.filter( product => product.id !== action.product.id );
+      return { ...state, cart: newCartWithoutProduct};
     case "LOAD_RESTAURANTSLIST":
       return { ...state, restaurantsList: action.restaurantsList };
     case "LOAD_SINGLE_RESTAURANT":

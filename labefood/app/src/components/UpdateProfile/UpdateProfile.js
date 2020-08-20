@@ -5,9 +5,11 @@ import { useForm } from '../../hooks/useForm';
 import { baseUrl } from '../../variables/variables';
 import { useProtectedRoute } from "../../hooks/useProtectedRoute";
 
-import { MainContainer, Container, Header, TextLarge } from "../../styles/mainStyles";
-  
-export const UpdateProfile = () => {
+import { MainContainer, Container, Header, TextLarge, BackBtn } from "../../styles/mainStyles";
+
+import iconBack from '../../images/back.svg';
+
+export const UpdateProfile = (props) => {
     const appContext = useContext(AppContext);
     const { form, onChange, resetForm } = useForm({ 
         name: "", 
@@ -48,7 +50,7 @@ export const UpdateProfile = () => {
 
     return (
         <MainContainer>
-            <Header><TextLarge>Editar</TextLarge></Header>
+            <Header><BackBtn src={iconBack} alt="Botão de voltar" onClick={props.onClick} /><TextLarge>Editar</TextLarge></Header>
             <Container>
                 <form onSubmit={handleUpdateProfile}>
                     <div className="textfield">

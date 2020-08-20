@@ -21,12 +21,6 @@ function App() {
       <GlobalStyle />
       <AppContext.Provider value={{ restaurantsList: state.restaurantsList, activeRestaurant: state.activeRestaurant, profile: state.profile, count: state.count, cart: state.cart, dispatch: dispatch }}>
         <BrowserRouter>
-        <AnimatedSwitch
-          atEnter={{ opacity: 0 }}
-          atLeave={{ opacity: 0 }}
-          atActive={{ opacity: 1 }}
-          className="switch-wrapper"
-        ></AnimatedSwitch>
           <Route exact path='/' component={HomeAnimation} />
           <Route exact path='/login' component={LoginPage} />
           <Route exact path='/signup' component={SignupPage} />

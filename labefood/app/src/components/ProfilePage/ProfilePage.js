@@ -7,8 +7,10 @@ import { Menu } from "../Menu/Menu";
 import { useProtectedRoute } from "../../hooks/useProtectedRoute";
 import { baseUrl } from "../../variables/variables";
 
-import { MainContainer, Container, Header, TextLarge, Card, ProductCategories, TextContent, TextMedium, TextSmall, TextRegular } from "../../styles/mainStyles";
-  
+import { MainContainer, Container, Header, TextLarge, Card, ProductCategories, TextContent, TextMedium, TextSmall, TextRegular, EditBtn, TextContentColor } from "../../styles/mainStyles";
+
+import iconEdit from '../../images/edit.svg'
+
 export const ProfilePage = () => {
     const appContext = useContext(AppContext);
     const [ loading, setLoading ] = useState(true);
@@ -75,27 +77,31 @@ export const ProfilePage = () => {
                 return <MainContainer>
                 <Header><TextLarge>Meu perfil</TextLarge></Header>
                 {loading ? <p>Carregando...</p> : (
-                    <Container>
-                        <div>
+                    <div>
+                        <TextContent>
+                            <EditBtn src={iconEdit} alt="Botão de editar endereço" onClick={onClickEditProfile} />
                             <TextMedium>{appContext.profile.name}</TextMedium>
                             <TextSmall>{appContext.profile.email}</TextSmall>
                             <TextSmall>{appContext.profile.cpf}</TextSmall>
-                            <button onClick={onClickEditProfile}>editar</button>
+                        </TextContent>
+                        <TextContentColor>
+                            <EditBtn src={iconEdit} alt="Botão de editar endereço" onClick={onClickEditAddress} />
                             <TextMedium>Endereço cadastrado</TextMedium>
                             <TextSmall>{appContext.profile.address}</TextSmall>
-                            <button onClick={onClickEditAddress}>editar</button>
-                        </div>
-                        <ProductCategories>Histórico de pedidos</ProductCategories>
-                        {ordersHistory ? ordersHistory.map(order => {
-                            return <Card key={order.createdAt}>
-                                <TextContent>
-                                    <TextMedium>{order.restaurantName}</TextMedium>
-                                    <TextSmall>{formatDate(order.createdAt)}</TextSmall>
-                                    <TextSmall>R$ {order.totalPrice.toFixed(2).replace(".", ",")}</TextSmall>
-                                </TextContent>
-                            </Card>
-                        }) : <TextSmall>Você não realizou nenhum pedido</TextSmall>}
-                    </Container>
+                        </TextContentColor>
+                        <Container>
+                            <ProductCategories>Histórico de pedidos</ProductCategories>
+                            {ordersHistory ? ordersHistory.map(order => {
+                                return <Card key={order.createdAt}>
+                                    <TextContent>
+                                        <TextMedium>{order.restaurantName}</TextMedium>
+                                        <TextSmall>{formatDate(order.createdAt)}</TextSmall>
+                                        <TextSmall>R$ {order.totalPrice.toFixed(2).replace(".", ",")}</TextSmall>
+                                    </TextContent>
+                                </Card>
+                            }) : <TextSmall>Você não realizou nenhum pedido</TextSmall>}
+                        </Container>
+                    </div>
                 )}
             </MainContainer>;
         }
