@@ -11,6 +11,7 @@ export const GlobalStyle = createGlobalStyle `
     }
     body {
         background-color: #EE766C;
+        font-family: 'Baloo Tamma 2', cursive;
     }
     a {
         text-decoration: none;
@@ -33,9 +34,12 @@ export const GlobalStyle = createGlobalStyle `
         width: 100%;
         padding: 16px;
         border-radius: 4px;
-        box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.25)
+        box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.25);
+        font-family: 'Baloo Tamma 2', cursive;
+        line-height: 100%;
     }
     button {
+        font-weight: 500;
         margin-top: 16px;
         color: #fff;
         background-color: #EE766C;
@@ -59,12 +63,4 @@ export const GlobalStyle = createGlobalStyle `
             font-size: 12px;
         }
     }
-    .switch-wrapper {
-        position: relative;
-    }
-    
-    .switch-wrapper > div {
-        position: absolute;
-    }
-
 `

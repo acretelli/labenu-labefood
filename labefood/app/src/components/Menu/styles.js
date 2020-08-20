@@ -18,6 +18,8 @@ export const MenuContainer = styled.nav`
     box-shadow: 0px -1px 2px rgba(0, 0, 0, 0.15);
 `
 
-export const MenuIcon = styled.li`
+export const MenuIcon = styled.img`
+    width: 28px;
+    height: 28px;
     cursor: pointer;
 `

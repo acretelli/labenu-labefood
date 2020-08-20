@@ -1,10 +1,14 @@
 import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
-import { useHistory } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { useForm } from '../../hooks/useForm';
 import { baseUrl } from '../../variables/variables';
 import { Menu } from '../Menu/Menu';
 import AppContext from "../../context/AppContext";
+
+import { MainContainer, Container, TextLargeRed, TextRegularCenter, ImgMedium } from "../../styles/mainStyles";
+
+import logoLabefood from "../../images/labefood-red.svg";
 
 export const LoginPage = () => {
     const appContext = useContext(AppContext);
@@ -26,8 +30,12 @@ export const LoginPage = () => {
         axios.post(`${baseUrl}/login`, body)
         .then( response => {
             window.localStorage.setItem("token", response.data.token);
-            getProfile(response.data.token)
-            history.push('/restaurants');
+            getProfile(response.data.token);
+            if(response.data.user.hasAddress) {
+                history.push('/restaurants');
+            } else {
+                history.push('/profile/address');
+            }
         })
         .catch(err => {
             console.log(err)
@@ -49,34 +57,37 @@ export const LoginPage = () => {
     }
 
     return (
-        <div className="container">
-            <Menu />
-            <h2>Login</h2>
-            <form onSubmit={handleLogin}>
-                <div className="textfield">
-                    <label htmlFor="email">E-mail</label>
-                    <input 
-                        id="email"
-                        name="email"
-                        type="email"
-                        value={form.email}
-                        placeholder="email@email.com"
-                        onChange={handleInputChange}
-                    />
-                </div>
-                <div className="textfield">
-                    <label htmlFor="password">Senha</label>
-                    <input 
-                        id="password"
-                        name="password"
-                        type="password"
-                        value={form.password}
-                        placeholder="Mínimo 6 caracteres"
-                        onChange={handleInputChange}
-                    />
-                </div>
-                <button>Entrar</button>
-            </form>
-        </div>
+        <MainContainer>
+            <Container>
+                <ImgMedium src={logoLabefood} alt="Logo Labefood" />
+                <TextLargeRed>Entre</TextLargeRed>
+                <form onSubmit={handleLogin}>
+                    <div className="textfield">
+                        <label htmlFor="email">E-mail</label>
+                        <input 
+                            id="email"
+                            name="email"
+                            type="email"
+                            value={form.email}
+                            placeholder="email@email.com"
+                            onChange={handleInputChange}
+                        />
+                    </div>
+                    <div className="textfield">
+                        <label htmlFor="password">Senha</label>
+                        <input 
+                            id="password"
+                            name="password"
+                            type="password"
+                            value={form.password}
+                            placeholder="Mínimo 6 caracteres"
+                            onChange={handleInputChange}
+                        />
+                    </div>
+                    <button>Entrar</button>
+                </form>
+                <TextRegularCenter>Não possui cadastro? <Link to={`/signup`}>Clique aqui</Link></TextRegularCenter>
+            </Container>
+        </MainContainer>
     )
 }
