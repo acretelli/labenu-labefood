@@ -22,6 +22,12 @@ export const ImgSmall = styled.img`
     height: 24px;
 `
 
+export const ImgMedium = styled.img`
+    display: block;
+    width: 160px;
+    margin: 16px auto;
+`
+
 export const FlexSpaceBetween = styled.div`
     display: flex;
     align-items: center;
@@ -67,10 +73,16 @@ export const TextContentColor = styled.div `
     background-color: #FFF9F8;
 `
 
-export const TextLarge = styled.h4 `
+export const TextLarge = styled.h2 `
     font-size: 1.15rem;
     text-align: center;
     color: #fff;
+`
+
+export const TextLargeRed = styled.h2 `
+    font-size: 1.15rem;
+    text-align: center;
+    color: #EE766C;
 `
 
 export const TextMedium = styled.h2 `
@@ -120,6 +132,13 @@ export const TextSmallRight = styled.p `
 export const TextRegular = styled.p `
     font-size: 1rem;
     line-height: 120%;
+`
+
+export const TextRegularCenter = styled.p `
+    margin: 16px 0;
+    font-size: 1rem;
+    line-height: 120%;
+    text-align: center;
 `
 
 export const QuantityValue = styled.p `

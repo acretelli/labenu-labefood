@@ -7,6 +7,7 @@ import AppContext from "../../context/AppContext";
 
 import { InputRadio, RadioField } from "./styles";
 import { MainContainer, Container, Header, TextLarge, FlexSpaceBetween, Card, CardProductImg, ProductCategories, TextContent, TextMedium, TextSmall, TextRegular, QuantityValue, AddBtn, TextSmallRight, TextContentColor } from "../../styles/mainStyles";
+import { Loading } from "../Loading/Loading";
 
 export const CartPage = () => {
     const appContext = useContext(AppContext);
@@ -76,7 +77,7 @@ export const CartPage = () => {
     return (
         <MainContainer>
             <Header><TextLarge>Meu carrinho</TextLarge></Header>
-            {loading ? <p>Carregando...</p> : (
+            {loading ? <Loading /> : (
                 <TextContentColor>
                     <TextMedium>Endereço de entrega</TextMedium>
                     <TextSmall>{address.street}, {address.number} { address.apartment && <span>, {address.apartment}</span>}</TextSmall>

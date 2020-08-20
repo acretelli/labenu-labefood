@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { Loading } from "../Loading/Loading";
 import { useForm } from '../../hooks/useForm';
 import { baseUrl } from '../../variables/variables';
 import { useProtectedRoute } from "../../hooks/useProtectedRoute";
@@ -35,7 +36,7 @@ export const UpdateAddress = (props) => {
             setLoading(false);
         })
         .catch(err => {
-            console.log(err);
+            console.log(err.message);
         })
     }, [])
 
@@ -67,7 +68,7 @@ export const UpdateAddress = (props) => {
         <MainContainer>
             <Header><BackBtn src={iconBack} alt="Botão de voltar" onClick={props.onClick} /><TextLarge>Endereço</TextLarge></Header>
             <Container>
-                {loading ? <p>Carregando...</p> : <form onSubmit={handleAddressUpdate}>
+                {loading ? <Loading /> : <form onSubmit={handleAddressUpdate}>
                     <div className="textfield">
                         <label htmlFor="street">Logradouro*</label>
                         <input 

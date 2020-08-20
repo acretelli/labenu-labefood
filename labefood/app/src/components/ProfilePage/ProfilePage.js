@@ -1,9 +1,11 @@
 import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
+import { useHistory } from "react-router-dom";
 import AppContext from '../../context/AppContext';
 import { UpdateProfile } from "../UpdateProfile/UpdateProfile";
 import { UpdateAddress } from "../UpdateAddress/UpdateAddress";
 import { Menu } from "../Menu/Menu";
+import { Loading } from "../Loading/Loading";
 import { useProtectedRoute } from "../../hooks/useProtectedRoute";
 import { baseUrl } from "../../variables/variables";
 
@@ -13,6 +15,7 @@ import iconEdit from '../../images/edit.svg'
 
 export const ProfilePage = () => {
     const appContext = useContext(AppContext);
+    const history = useHistory();
     const [ loading, setLoading ] = useState(true);
     const [ currentPage, setCurrentPage ] = useState('profile');
     const [ ordersHistory, setOrdersHistory ] = useState();
@@ -67,6 +70,11 @@ export const ProfilePage = () => {
         setCurrentPage('profile')
     }
 
+    const handleLogout = () => {
+        localStorage.removeItem('token');
+        history.push('/login');
+    }
+
     const page = () => {
         switch(currentPage) {
             case 'edit':
@@ -76,7 +84,7 @@ export const ProfilePage = () => {
             default:
                 return <MainContainer>
                 <Header><TextLarge>Meu perfil</TextLarge></Header>
-                {loading ? <p>Carregando...</p> : (
+                {loading ? <Loading /> : (
                     <div>
                         <TextContent>
                             <EditBtn src={iconEdit} alt="Botão de editar endereço" onClick={onClickEditProfile} />
@@ -91,7 +99,7 @@ export const ProfilePage = () => {
                         </TextContentColor>
                         <Container>
                             <ProductCategories>Histórico de pedidos</ProductCategories>
-                            {ordersHistory ? ordersHistory.map(order => {
+                            {ordersHistory && ordersHistory.length !== 0 ? ordersHistory.map(order => {
                                 return <Card key={order.createdAt}>
                                     <TextContent>
                                         <TextMedium>{order.restaurantName}</TextMedium>
@@ -100,10 +108,11 @@ export const ProfilePage = () => {
                                     </TextContent>
                                 </Card>
                             }) : <TextSmall>Você não realizou nenhum pedido</TextSmall>}
+                        <button onClick={handleLogout}>Logout</button>
                         </Container>
                     </div>
                 )}
-            </MainContainer>;
+            </MainContainer>
         }
     }
 

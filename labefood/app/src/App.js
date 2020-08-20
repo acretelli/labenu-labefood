@@ -1,5 +1,5 @@
 import React, { useReducer } from 'react';
-import { BrowserRouter, Route } from 'react-router-dom';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import { AnimatedSwitch } from 'react-router-transition';
 import { GlobalStyle } from './styles/globalStyle';
 import { initialState, appReducer } from './reducer/appReducer'
@@ -11,6 +11,7 @@ import { RestaurantsListPage } from './components/RestaurantsListPage/Restaurant
 import { RestaurantItemPage } from './components/RestaurantItemPage/RestaurantItemPage';
 import { ProfilePage } from './components/ProfilePage/ProfilePage';
 import { CartPage } from './components/CartPage/CartPage';
+import { ErrorPage } from './components/ErrorPage/ErrorPage';
 
 function App() {
   
@@ -21,13 +22,32 @@ function App() {
       <GlobalStyle />
       <AppContext.Provider value={{ restaurantsList: state.restaurantsList, activeRestaurant: state.activeRestaurant, profile: state.profile, count: state.count, cart: state.cart, dispatch: dispatch }}>
         <BrowserRouter>
-          <Route exact path='/' component={HomeAnimation} />
-          <Route exact path='/login' component={LoginPage} />
-          <Route exact path='/signup' component={SignupPage} />
-          <Route exact path='/restaurants' component={RestaurantsListPage} />
-          <Route exact path='/restaurants/:id' component={RestaurantItemPage} />
-          <Route exact path='/cart' component={CartPage} />
-          <Route exact path='/profile' component={ProfilePage} />
+          <Switch>
+            <Route exact path='/'>
+              <HomeAnimation />
+            </Route>
+            <Route exact path='/login'>
+              <LoginPage />
+            </Route>
+            <Route exact path='/signup'>
+              <SignupPage />
+            </Route>
+            <Route exact path='/restaurants'>
+              <RestaurantsListPage />
+            </Route>
+            <Route exact path='/restaurants/:id'>
+              <RestaurantItemPage />
+            </Route>
+            <Route exact path='/cart'>
+              <CartPage />
+            </Route>
+            <Route exact path='/profile'>
+              <ProfilePage />
+            </Route>
+            <Route path='/'>
+              <ErrorPage />
+            </Route>
+          </Switch>
         </BrowserRouter>
       </AppContext.Provider>
     </div>

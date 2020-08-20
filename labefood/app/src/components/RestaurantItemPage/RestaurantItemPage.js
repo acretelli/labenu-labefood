@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useParams, useHistory } from 'react-router-dom';
 import AppContext from '../../context/AppContext';
 import { Menu } from '../Menu/Menu';
+import { Loading } from '../Loading/Loading';
 import { useProtectedRoute } from "../../hooks/useProtectedRoute";
 import { baseUrl } from '../../variables/variables';
 
@@ -90,7 +91,7 @@ export const RestaurantItemPage = () => {
             {adding && <Overlay />}
             <Header><BackBtn src={iconBack} alt="Botão de voltar" onClick={goToRestaurantsList}/><TextLarge>Restaurante</TextLarge></Header>
             {loading ? (
-                <p>Carregando...</p>
+                <Loading />
             ) : (
                 <Container>
                     <CardRestaurantImg src={logoUrl} alt={name} />

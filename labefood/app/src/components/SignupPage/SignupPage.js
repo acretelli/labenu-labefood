@@ -1,10 +1,17 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState } from "react";
 import axios from "axios";
+import { useHistory } from "react-router-dom";
 import { useForm } from '../../hooks/useForm';
 import { baseUrl } from '../../variables/variables';
-import { useProtectedRoute } from "../../hooks/useProtectedRoute";
-  
+
+import { MainContainer, Container, Header, TextLarge, BackBtn } from "../../styles/mainStyles";
+
+import iconBack from "../../images/back.svg";
+
 export const SignupPage = () => {
+    const history = useHistory();
+    const [ addressPage, setAddressPage ] = useState(false);
+    const [ token, setToken ] = useState('');
     const { form, onChange, resetForm } = useForm({ 
         name: "", 
         email: "", 
@@ -24,17 +31,8 @@ export const SignupPage = () => {
         onChange(name, value)
     }
 
-    const token = useProtectedRoute();
-  
-    const axiosConfig = {
-      headers: {
-        auth: token,
-      }
-    }
-
     const handleSignupProfile = event => {
         event.preventDefault();
-
         const body = {
             "name": form.name,
             "email": form.email,
@@ -42,17 +40,32 @@ export const SignupPage = () => {
             "password": form.password,
         }
         
-        axios.put(`${baseUrl}/profile`, body, axiosConfig)
-        .then( () => {
-            alert('Sucesso')
-        })
-        .catch(err => {
-            console.log(err)
-        })
+        if ( form.password === form.passwordConfirm) {
+            
+            axios.post(`${baseUrl}/signup`, body)
+            .then( response => {
+                alert('Sucesso');
+                setToken(response.data.token);
+                setAddressPage(true);
+            })
+            .catch(err => {
+                alert("Email ou cpf já cadastrados");
+            });
+
+        } else {
+            alert("A confirmação de senha deve igual à senha.");
+        }
     }
 
     const handleSignupAddress = event => {
         event.preventDefault();
+
+        const axiosConfig = {
+          headers: {
+            auth: token,
+          }
+        }
+
         const body =  {
             "street": form.street,
             "number": form.number,
@@ -61,149 +74,175 @@ export const SignupPage = () => {
             "state": form.state,
             "complement": form.complement
         }
-        axios.put(`${baseUrl}/address`, body, axiosConfig)
-        .then( () => {
-            alert("Sucesso")
-        })
-        .catch( err => {
-            console.log(err)
-        })
+
+        if(form.street === "" || form.number === "" || form.neighbourhood === "" || form.city === "" || form.state === "") {
+            alert("Você deve preencher todos os campos obrigatórios.")
+        } else {
+            axios.put(`${baseUrl}/address`, body, axiosConfig)
+            .then( response => {
+                window.localStorage.setItem("token", response.data.token);
+                alert("Sucesso");
+                history.push('/restaurants');
+            })
+            .catch( err => {
+                console.log(err)
+            })
+        }
+    }
+
+    const goToLogin = () => {
+        history.push('/login')
+    }
+
+    const goToSignUp = () => {
+        setAddressPage(false)
     }
 
     return (
-        <div  className="container">
-            <div>
-                <h2>Cadastro</h2>
-                <form onSubmit={handleSignupProfile}>
+        <MainContainer>
+            {!addressPage ? <Header><BackBtn src={iconBack} alt="Botão de voltar" onClick={goToLogin}/><TextLarge>Cadastro</TextLarge></Header> : <Header><BackBtn src={iconBack} alt="Botão de voltar" onClick={goToSignUp}/><TextLarge>Endereço</TextLarge></Header> }
+            {!addressPage ? <Container>
+                <form>
                     <div className="textfield">
-                        <label for="name">Nome*</label>
+                        <label htmlFor="name">Nome*</label>
                         <input 
                             required
                             id="name"
                             name="name"
                             type="text"
                             placeholder="Nome e sobrenome"
+                            value={form.name}
                             onChange={handleInputChange}
                         />
                     </div>
                     <div className="textfield">
-                        <label for="email">E-mail*</label>
+                        <label htmlFor="email">E-mail*</label>
                         <input 
                             required
                             id="email"
                             name="email"
                             type="email"
                             placeholder="email@email.com"
+                            value={form.email}
                             onChange={handleInputChange}
                         />
                     </div>
                     <div className="textfield">
-                        <label for="cpf">CPF*</label>
+                        <label htmlFor="cpf">CPF*</label>
                         <input 
                             required
                             id="cpf"
                             name="cpf"
-                            type="number"
-                            placeholder="000.000.000-00"
+                            type="text"
+                            pattern="\d{3}\.\d{3}\.\d{3}-\d{2}"
+                            placeholder="Digite um CPF no formato: 000.000.000-00"
+                            value={form.cpf}
                             onChange={handleInputChange}
                         />
                     </div>
                     <div className="textfield">
-                        <label for="password">Senha*</label>
+                        <label htmlFor="password">Senha*</label>
                         <input 
                             required
                             id="password"
                             name="password"
                             type="password"
                             placeholder="Mínimo 6 caracteres"
+                            value={form.password}
                             onChange={handleInputChange}
                         />
                     </div>
                     <div className="textfield">
-                        <label for="password-confirm">Confirmar senha*</label>
+                        <label htmlFor="password-confirm">Confirmar senha*</label>
                         <input 
                             required
                             id="password-confirm"
                             name="passwordConfirm"
                             type="password"
                             placeholder="Confirme a senha anterior"
+                            value={form.passwordConfirm}
                             onChange={handleInputChange}
                         />
                     </div>
-                    <button>Cadastrar</button>
+                    <button onClick={handleSignupProfile}>Próximo</button>
                 </form>
-            </div>
-            <div>
+            </Container>: <Container>
                 <h2>Endereço</h2>
-                <form onSubmit={handleSignupAddress}>
+                 <form onSubmit={handleSignupAddress}>
                     <div className="textfield">
-                        <label for="street">Logradouro*</label>
-                        <input 
+                         <label htmlFor="street">Logradouro*</label>
+                         <input 
                             required
                             id="street"
                             name="street"
                             type="text"
                             placeholder="Rua/ Av."
+                            value={form.street}
                             onChange={handleInputChange}
                         />
                     </div>
                     <div className="textfield">
-                        <label for="Número">Número*</label>
+                        <label htmlFor="Número">Número*</label>
                         <input 
                             required
                             id="number"
                             name="number"
                             type="number"
                             placeholder="Número"
+                            value={form.number}
                             onChange={handleInputChange}
                         />
                     </div>
                     <div className="textfield">
-                        <label for="complement">Complemento</label>
+                        <label htmlFor="complement">Complemento</label>
                         <input 
                             id="complement"
                             name="complement"
                             type="text"
                             placeholder="Apto./Bloco"
+                            value={form.complement}
                             onChange={handleInputChange}
                         />
                     </div>
                     <div className="textfield">
-                        <label for="neighbourhood">Bairro*</label>
+                        <label htmlFor="neighbourhood">Bairro*</label>
                         <input 
                             required
                             id="neighbourhood"
                             name="neighbourhood"
                             type="text"
                             placeholder="Bairro"
+                            value={form.neighbourhood}
                             onChange={handleInputChange}
                         />
                     </div>
                     <div className="textfield">
-                        <label for="city">Cidade*</label>
+                        <label htmlFor="city">Cidade*</label>
                         <input 
                             required
                             id="city"
                             name="city"
                             type="text"
                             placeholder="Cidade"
+                            value={form.city}
                             onChange={handleInputChange}
                         />
                     </div>
                     <div className="textfield">
-                        <label for="state">Estado*</label>
+                        <label htmlFor="state">Estado*</label>
                         <input 
                             required
                             id="state"
                             name="state"
                             type="text"
                             placeholder="Estado"
+                            value={form.state}
                             onChange={handleInputChange}
                         />
                     </div>
-                    <button>Cadastrar</button>
+                    <button>Salvar</button>
                 </form>
-            </div>
-        </div>
+            </Container>}
+        </MainContainer>
     )
 }

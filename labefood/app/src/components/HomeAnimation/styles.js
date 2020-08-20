@@ -2,12 +2,12 @@ import styled, { keyframes } from "styled-components";
 
 const scaleOut = keyframes`
     0% {
-        transform: scaleX(1);
+        transform: scale(1);
         opacity: 1;
     }
     100% {
-        transform: scaleX(0);
-        opacity: 1;
+        transform: scale(3);
+        opacity: 0;
     }
 `;
 
@@ -24,5 +24,5 @@ export const HomeContainer = styled.div `
 `
 
 export const LogoImg = styled.img `
-    max-width: 296px;
+    max-width: 240px;
 `

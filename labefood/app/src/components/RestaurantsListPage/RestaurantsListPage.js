@@ -3,12 +3,12 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import AppContext from '../../context/AppContext';
 import { Menu } from '../Menu/Menu';
+import { Loading } from '../Loading/Loading';
 import { baseUrl } from '../../variables/variables';
 import { useProtectedRoute } from "../../hooks/useProtectedRoute";
 
 import { MainContainer, Container, Header, ImgSmall, FlexSpaceBetween, Categories, Card, CardRestaurantImg, TextContent, TextMedium, TextSmall, TextLarge, FlexSpaceBetweenCategories, BackBtn, InputSearch } from "../../styles/mainStyles";
 
-import logoLabefood from "../../images/labefood-white.svg";
 import iconBack from "../../images/back.svg";
 
 export const RestaurantsListPage = () => {
@@ -29,7 +29,9 @@ export const RestaurantsListPage = () => {
         axios.get(`${baseUrl}/restaurants`, axiosConfig)
         .then( response => {
             appContext.dispatch({ type: "LOAD_RESTAURANTSLIST", restaurantsList: response.data.restaurants });
-            setLoading(false);
+            setTimeout(() => {
+                setLoading(false);
+            }, 1000);
         })
         .catch(err => {
             console.log(err)
@@ -85,12 +87,12 @@ export const RestaurantsListPage = () => {
 
     return (
         <MainContainer>
-            {!searching ? <Header><ImgSmall src={logoLabefood} alt="Logo Labefood"/></Header> : <Header><BackBtn src={iconBack} alt="Botão de voltar" onClick={goToRestaurantsList}/><TextLarge>Busca</TextLarge></Header>}
+            {!searching ? <Header><TextLarge>Labefood</TextLarge></Header> : <Header><BackBtn src={iconBack} alt="Botão de voltar" onClick={goToRestaurantsList}/><TextLarge>Busca</TextLarge></Header>}
             <Container>
                 <InputSearch value={inputSearch} placeholder="Restaurante" onChange={onChangeInput}/>
             </Container>
             {loading ? (
-                <p>Carregando...</p>
+                <Loading />
                 ) : (
                 <Container>
                     {!searching && <FlexSpaceBetweenCategories>
