@@ -50,13 +50,26 @@ export const RestaurantItemPage = () => {
     }
 
     const openQuantityBox = productId => {
-        const indexId = products.findIndex( product => {
-          return product.id === productId
-        });
-    
-        const produto = products[indexId];
-    
-        setAdding(produto)
+        
+        console.log(appContext.cart);
+        console.log(appContext.activeRestaurant.id);
+        if(appContext.cart.length !== 0) {
+            console.log(appContext.cart[0].restaurantId);
+        }
+        
+        if(appContext.cart.length === 0 || appContext.cart.length !== 0 && appContext.activeRestaurant.id === appContext.cart[0].restaurantId) {
+
+            const indexId = products.findIndex( product => {
+              return product.id === productId
+            });
+        
+            const produto = products[indexId];
+        
+            setAdding(produto)
+            
+        } else {
+            alert("Você já tem um pedido aberto em outro restaurante.")
+        }
     }
 
     const sumToCounter = () => {
@@ -115,7 +128,7 @@ export const RestaurantItemPage = () => {
                                                     <TextMedium>{product.name}</TextMedium>
                                                     <TextSmall>{product.description}</TextSmall>
                                                     <TextRegular>R$ {product.price.toFixed(2).replace(".", ",")}</TextRegular>
-                                                    {appContext.cart && appContext.cart.map( productCart => product.id === productCart.id && <QuantityValue>{productCart.quantity}</QuantityValue>)}
+                                                    {appContext.cart && appContext.cart.map( productCart => product.id === productCart.id && <QuantityValue key={productCart.id}>{productCart.quantity}</QuantityValue>)}
                                                     {appContext.cart.findIndex(productCart => product.id === productCart.id) === -1 ? <AddBtn onClick={() => openQuantityBox(product.id)}>Adicionar</AddBtn> : <AddBtn onClick={() => removeQuantity(product)}>Remover</AddBtn>}
                                                     </TextContent>
                                                     </FlexSpaceBetween>

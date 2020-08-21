@@ -10,6 +10,7 @@ import { useProtectedRoute } from "../../hooks/useProtectedRoute";
 import { MainContainer, Container, Header, ImgSmall, FlexSpaceBetween, Categories, Card, CardRestaurantImg, TextContent, TextMedium, TextSmall, TextLarge, FlexSpaceBetweenCategories, BackBtn, InputSearch } from "../../styles/mainStyles";
 
 import iconBack from "../../images/back.svg";
+import { ActiveOrder } from "../ActiveOrder/ActiveOrder";
 
 export const RestaurantsListPage = () => {
     const [ loading, setLoading ] = useState(true);
@@ -119,6 +120,7 @@ export const RestaurantsListPage = () => {
                     }) : <TextSmall>Nada encontrado :(</TextSmall>}
                 </Container>
             )}
+            <ActiveOrder />
             <Menu />
         </MainContainer>
     )
