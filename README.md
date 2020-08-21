@@ -15,11 +15,10 @@
 1. React
 2. Autenticação
 3. Estilização Avançada com CSS
-4. Uso de bibliotecas de UI (MaterialUI)
-5. Aplicações com múltiplas rotas utilizando React Router
-6. Formulários com Validação
-7. Teste unitário de lógica e de componentes com react-testing-library e Jest
-8. Responsividade e adaptação de aplicação web para front.
+4. Aplicações com múltiplas rotas utilizando React Router
+5. Formulários com Validação
+6. Teste unitário de lógica e de componentes com react-testing-library e Jest
+7. Responsividade e adaptação de aplicação web para front.
 
 <br>
 
